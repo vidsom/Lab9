@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @see <a href="https://cs125.cs.illinois.edu/lab/10/">Lab 10 Description</a>
  */
 public class EmployeeDatabase {
+
 
     /**
      * List of employees.
@@ -30,8 +32,8 @@ public class EmployeeDatabase {
     /**
      * Returns the manager for the given employee.
      *
-     * @param employee
-     * @return
+     * @param employee Employee.
+     * @return manager for the given employee.
      */
     Employee findManager(final Employee employee) {
         Employee manager = null;
@@ -52,10 +54,31 @@ public class EmployeeDatabase {
      * @param employee name of the employee
      * @return int
      */
+
     public int countManagersAbove(final Employee employee) {
-        /*
-         * Implement this function
-         */
+        int counter = 0;
+        if (findManager(employee) != null) {
+            countManagersAbove(findManager(employee));
+            counter++;
+        }
+        return counter;
+    }
+
+    /**
+     *
+     * @param e employee.
+     * @return array.
+     */
+    public ArrayList<Employee> mySub(final Employee e) {
+        ArrayList<Employee> output = new ArrayList<>();
+        for (int i = 0; i < employees.size(); i++) {
+            Employee temp = employees.get(i);
+            String manager = temp.getManager();
+            if (manager.equals(e.getName())) {
+                output.add(temp);
+            }
+        }
+        return output;
     }
 
     /**
@@ -67,9 +90,16 @@ public class EmployeeDatabase {
      * @return int
      */
     public int countEmployeesUnder(final Employee employee) {
-        /*
-         * Implement this function
-         */
+        int count = 0;
+        ArrayList<Employee> mySubs = mySub(employee);
+        if (mySubs.isEmpty()) {
+            return 0;
+        } else {
+            for (int i = 0; i < mySubs.size(); i++) {
+                count = count + countEmployeesUnder(mySubs.get(i)) + 1;
+            }
+        }
+        return count;
     }
 
     /**
